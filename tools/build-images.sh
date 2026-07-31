@@ -4,11 +4,23 @@
 #
 # The originals are 86MB of unoptimized 4K PNGs and full-res iPhone JPEGs. They are the
 # source of truth and stay in git, but they are never served. This script produces
-# images/opt/<slug>-<width>.{avif,jpg} which is what the pages actually reference.
+# images/opt/<slug>-<width>.jpg, which is what the pages reference via srcset.
 #
-# Uses only `sips` (built into macOS) — no npm install, no homebrew. Verified: sips writes
-# AVIF and JPEG. It cannot write WebP, and this machine's ffmpeg has no libwebp, so the
-# pages use <picture> with an AVIF source and a JPEG fallback.
+# Uses only `sips` (built into macOS) — no npm install, no homebrew.
+#
+# JPEG ONLY, deliberately. sips *can* write AVIF, and we shipped that first, but it
+# encodes anything non-trivial as a TILED GRID (a `grid` derived item over N `av01`
+# tiles — 6 tiles at 1200px, 12 at 2000px). Chrome reads the dimensions off those
+# files, reports a non-zero naturalWidth, and then paints nothing at all. The
+# single-tile outputs render fine, which is why smaller derivatives worked and the
+# 2000px ones silently rendered as black boxes on the deployed site. Worse, <picture>
+# has no decode-failure fallback: once the browser picks the AVIF source it will not
+# fall back to the JPEG. ffmpeg decodes the same files happily, so this is specific to
+# the sips grid output.
+#
+# If AVIF/WebP is wanted later, generate it with something that writes single-item
+# files (sharp/libvips, cwebp, avifenc) and verify it actually PAINTS in a browser —
+# checking naturalWidth is not sufficient.
 #
 # Usage:  ./tools/build-images.sh            # build everything
 #         ./tools/build-images.sh --force    # rebuild even if up to date
@@ -22,7 +34,6 @@ FORCE=${1:-}
 mkdir -p "$OUT"
 
 JPEG_Q=76      # visually transparent on dark photographic material
-AVIF_Q=58      # AVIF sits roughly 20pts lower than JPEG for equivalent quality
 
 native_width() { sips -g pixelWidth "$1" | awk '/pixelWidth/{print $2}'; }
 
@@ -47,10 +58,9 @@ derive() {
     local target=$w
     [ "$w" -gt "$native" ] && target=$native
 
-    local jpg="$OUT/$slug-$w.jpg" avif="$OUT/$slug-$w.avif"
+    local jpg="$OUT/$slug-$w.jpg"
 
-    if [ -z "$FORCE" ] && [ -f "$jpg" ] && [ -f "$avif" ] \
-       && [ "$jpg" -nt "$src" ] && [ "$avif" -nt "$src" ]; then
+    if [ -z "$FORCE" ] && [ -f "$jpg" ] && [ "$jpg" -nt "$src" ]; then
       echo "  -- $slug-$w (up to date)"
       continue
     fi
@@ -58,12 +68,8 @@ derive() {
     sips --resampleWidth "$target" "$work" \
          -s format jpeg -s formatOptions "$JPEG_Q" \
          --out "$jpg" >/dev/null
-    sips --resampleWidth "$target" "$work" \
-         -s format avif -s formatOptions "$AVIF_Q" \
-         --out "$avif" >/dev/null
 
-    printf '  ok %-22s %5spx  jpg %-6s avif %s\n' "$slug-$w" "$target" \
-      "$(du -h "$jpg" | cut -f1)" "$(du -h "$avif" | cut -f1)"
+    printf "  ok %-22s %5spx  jpg %s\n" "$slug-$w" "$target" "$(du -h "$jpg" | cut -f1)"
   done
 
   [ "$rot" != "0" ] && rm -f "$work"
