@@ -317,12 +317,20 @@ ul { list-style: none; }
 .panel::after {
   content: '';
   position: absolute; inset: 0; z-index: -1;
-  background: linear-gradient(to top, rgba(0,0,0,.92) 5%, rgba(0,0,0,.35) 55%, rgba(0,0,0,.6) 100%);
+  background: linear-gradient(to top, rgba(0,0,0,.9) 4%, rgba(0,0,0,.28) 58%, rgba(0,0,0,.45) 100%);
   pointer-events: none;
 }
 
 .panel-index { margin-bottom: auto; }
-.panel-title { margin: clamp(.75rem, 2vw, 1.1rem) 0 .75rem; }
+
+/* Panels are half-width on desktop, so the shared .d-lg size overflows here —
+   "CINEMATOGRAPHY" needs ~10.1x its font-size and only gets ~607px of column.
+   Sized to fit the column rather than the page. */
+.panel-title {
+  margin: clamp(.75rem, 2vw, 1.1rem) 0 .75rem;
+  font-size: clamp(1.6rem, 3.6vw, 3.2rem);
+}
+.split--single .panel-title { font-size: clamp(1.6rem, 4.4vw, 4rem); }
 .panel-sub { color: var(--grey-1); font-size: clamp(.85rem, 1.4vw, 1rem); max-width: 32ch; font-weight: 500; }
 
 .panel-go {
