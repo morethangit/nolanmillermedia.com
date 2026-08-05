@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nolan Miller — Cinematographer &amp; Lighting Designer</title>
+<meta name="description" content="Nolan Miller is a cinematographer and lighting designer in Cincinnati, Ohio. A frame keeps the light. A room lets it go.">
+<meta name="theme-color" content="#000000">
+
+<!-- Preview address. No canonical, and noindex, so this never competes with
+     the live homepage in search while both are up. Both come off when this
+     page is promoted to "/". -->
+<meta name="robots" content="noindex">
+
+<link rel="icon" href="/images/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/images/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/stage.css">
+<script>document.documentElement.classList.add('js');</script>
+</head>
+
+<body class="stage-page">
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- The strike: a white wipe out of the seam. Decorative only, pointer-events
+     none, and it is never on top of content the reader needs. -->
+<div class="strike" aria-hidden="true"></div>
+
+<nav class="nav">
+  <a class="nav-mark" href="/studio/">Nolan Miller</a>
+  <ul class="nav-links">
+    <li><a href="/cinematography/">Cinematography</a></li>
+    <li><a href="/lighting/">Lighting</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- The fader: fills from the bottom as the page scrolls. Pure CSS scroll
+     timeline where supported, a static hairline where not. -->
+<div class="fader" aria-hidden="true"><span></span></div>
+
+<main id="main">
+
+  <!-- The split ============================================================ -->
+  <header class="stage">
+
+    <!-- Left: the lens. A rectangle. Closed, orthogonal, it keeps the light. -->
+    <a class="half half--lens" href="/cinematography/">
+      <span class="half-inner stage-fade stage-fade--2">
+        <span class="half-no mono">01</span>
+
+        <span class="half-art" aria-hidden="true">
+          <svg class="art art--frame" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid meet" focusable="false">
+            <!-- 2.39:1 — the aperture the page looks through -->
+            <rect class="art-frame" x="40" y="63" width="320" height="134"
+                  fill="none" stroke="currentColor" vector-effect="non-scaling-stroke"/>
+            <g class="art-brackets" fill="none" stroke="currentColor" vector-effect="non-scaling-stroke">
+              <path class="bk bk--tl" d="M40 91 V63 H68"/>
+              <path class="bk bk--tr" d="M332 63 H360 V91"/>
+              <path class="bk bk--br" d="M360 169 V197 H332"/>
+              <path class="bk bk--bl" d="M68 197 H40 V169"/>
+            </g>
+          </svg>
+        </span>
+
+        <span class="half-foot">
+          <span class="half-label display">Cinematographer</span>
+          <span class="half-go" aria-hidden="true">&rarr;</span>
+        </span>
+      </span>
+    </a>
+
+    <!-- Right: the room. A beam. Open, diagonal, it lets the light go. -->
+    <a class="half half--room" href="/lighting/">
+      <span class="half-inner stage-fade stage-fade--2">
+        <span class="half-no mono">02</span>
+
+        <span class="half-art" aria-hidden="true">
+          <svg class="art art--beam" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid meet" focusable="false">
+            <g class="art-rays" fill="none" stroke="currentColor" vector-effect="non-scaling-stroke">
+              <line class="ry" x1="200" y1="18" x2="40"  y2="250"/>
+              <line class="ry" x1="200" y1="18" x2="93"  y2="250"/>
+              <line class="ry" x1="200" y1="18" x2="146" y2="250"/>
+              <line class="ry" x1="200" y1="18" x2="200" y2="250"/>
+              <line class="ry" x1="200" y1="18" x2="253" y2="250"/>
+              <line class="ry" x1="200" y1="18" x2="306" y2="250"/>
+              <line class="ry" x1="200" y1="18" x2="360" y2="250"/>
+            </g>
+          </svg>
+        </span>
+
+        <span class="half-foot">
+          <span class="half-label display">Lighting Designer</span>
+          <span class="half-go" aria-hidden="true">&rarr;</span>
+        </span>
+      </span>
+    </a>
+
+    <!-- The seam, and the name across it. The title is blend-mode difference,
+         so it is white on the dark half and black on the lit one — one copy of
+         the text, flipping mid-word as the seam slides underneath it. -->
+    <span class="seam" aria-hidden="true"></span>
+
+    <div class="stage-name">
+      <h1 class="display d-hero stage-fade">
+        <span class="ln">Nolan</span>
+        <span class="ln">Miller</span>
+      </h1>
+      <p class="stage-place mono stage-fade stage-fade--3">Cincinnati, OH</p>
+    </div>
+  </header>
+
+  <!-- Thesis =============================================================== -->
+  <section class="band band--1">
+    <p class="band-tick" aria-hidden="true"></p>
+    <h2 class="display d-lg reveal">
+      A frame keeps the light.<br>
+      <em>A room lets it go.</em>
+    </h2>
+    <p class="band-tick" aria-hidden="true"></p>
+  </section>
+
+  <!-- About ================================================================ -->
+  <section class="band band--2" id="about">
+    <p class="eyebrow mono reveal">About</p>
+    <div class="band-body reveal reveal-1">
+      <p>I'm a director of photography and lighting designer in Cincinnati,
+         studying at the University of Cincinnati.</p>
+      <p>Designing a room teaches you how light behaves at scale; shooting
+         teaches you how little of it you actually need.</p>
+    </div>
+  </section>
+
+  <!-- Contact ============================================================== -->
+  <section class="band band--3" id="contact">
+    <p class="eyebrow mono reveal">Get in touch</p>
+    <h2 class="display d-lg reveal reveal-1">Let's make<br>something</h2>
+
+    <a class="contact-mail reveal reveal-2" href="mailto:nolan.miller126@gmail.com">nolan.miller126@gmail.com</a>
+
+    <div class="profiles reveal reveal-3">
+      <a class="profile" href="https://www.youtube.com/@nolanmiller186" target="_blank" rel="noopener">
+        <span class="mono">Media</span>
+        <span class="display d-md">YouTube</span>
+        <span class="profile-handle">@nolanmiller186</span>
+      </a>
+      <a class="profile" href="https://www.instagram.com/visualsbynolan" target="_blank" rel="noopener">
+        <span class="mono">Stills &amp; behind the scenes</span>
+        <span class="display d-md">Instagram</span>
+        <span class="profile-handle">@visualsbynolan</span>
+      </a>
+      <a class="profile" href="https://www.linkedin.com/in/nolancm" target="_blank" rel="noopener">
+        <span class="mono">Professional</span>
+        <span class="display d-md">LinkedIn</span>
+        <span class="profile-handle">/in/nolancm</span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p class="mono">&copy; 2026 Nolan Miller</p>
+  <ul class="footer-links mono">
+    <li><a href="/cinematography/">Cinematography</a></li>
+    <li><a href="/lighting/">Lighting Design</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</footer>
+
+<script src="/assets/site.js" defer></script>
+<script src="/assets/stage.js" defer></script>
+</body>
+</html>
