@@ -1,0 +1,498 @@
+/* ==========================================================================
+   nolanmillermedia.com — "Stage"
+
+   Loaded only by /studio/. It sits on top of site.css and borrows every
+   token, type class and component from it. It adds no colour: everything
+   here is #000, #fff and the four greys already declared in site.css.
+
+   The idea: the screen is split down the middle, and THE HALF YOU LOOK AT IS
+   THE HALF THAT GETS LIT. site.css already states the law — "work rests UNLIT
+   and comes up on hover/focus" — this page just applies it to the whole
+   viewport, and inverts instead of brightening.
+
+   Two shapes carry the two disciplines, and the rule is absolute:
+     cinematography is a RECTANGLE — closed, orthogonal, it keeps the light
+     lighting design is a BEAM     — open, diagonal, it lets the light go
+   Neither ever borrows the other's geometry, here or on the subpages.
+   ========================================================================== */
+
+.stage-page {
+  /* How far the divider travels when a half is lit. Kept modest on purpose:
+     the dark half's label is anchored to the outer edge, and at the far end
+     of this travel the seam is still well clear of it at every width. */
+  --seam: 50%;
+  --seam-open: 61%;
+  --seam-shut: 39%;
+}
+
+
+/* --- Nav ------------------------------------------------------------------
+   The nav crosses both halves, so it can't have a fixed colour. Difference
+   blending solves it for free: white over the dark half, black over the lit
+   one, no JS and no duplicated markup. The stuck backdrop comes off — a
+   translucent black bar over a white half reads as a smear, and
+   backdrop-filter under a blend mode is unreliable anyway. */
+
+.stage-page .nav { mix-blend-mode: difference; }
+.stage-page .nav.is-stuck {
+  background: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom-color: transparent;
+}
+/* Grey at 50% luminance survives inversion badly — it stays grey on both
+   sides. Full white inverts to full black, so the nav is legible either way. */
+.stage-page .nav-links a { color: var(--white); }
+
+
+/* --- The split ------------------------------------------------------------ */
+
+.stage {
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+  /* Contains the difference blending, so the name never blends with the
+     sections scrolling underneath the hero. */
+  isolation: isolate;
+  background: var(--black);
+}
+
+/* Both halves are full-bleed layers, revealed by clip-path rather than sized
+   by layout. Clipping is composited and it also clips hit-testing, so the
+   pointer lands on exactly the half you can see — and moving the seam costs
+   no reflow. */
+.half {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background: var(--black);
+  color: var(--line-lit);              /* the resting stroke of the geometry */
+  transition:
+    background .75s var(--cue),
+    color      .75s var(--cue),
+    clip-path  .75s var(--cue);
+}
+.half--lens { clip-path: inset(0 calc(100% - var(--seam)) 0 0); }
+.half--room { clip-path: inset(0 0 0 var(--seam)); }
+
+.half:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: -6px;
+}
+
+/* Content sits in a fixed half-width column anchored to the OUTER edge, so it
+   never moves when the seam slides — the seam only reveals or swallows the
+   empty space beside it. */
+.half-inner {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(6.5rem, 14vh, 9.5rem) var(--pad) clamp(2.5rem, 6vh, 4rem);
+}
+.half--lens .half-inner { left: 0;  align-items: flex-start; }
+.half--room .half-inner { right: 0; align-items: flex-end; text-align: right; }
+
+.half-no { color: var(--grey-2); transition: color .75s var(--cue); }
+
+/* The geometry is anchored to the OUTER edge of each half, not centred in it:
+   the name owns the middle of the screen, and nothing is allowed to sit
+   underneath it. See the sizing note on .stage-name .d-hero. */
+.half-art {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 0;
+}
+.half--lens .half-art { justify-content: flex-start; }
+.half--room .half-art { justify-content: flex-end; }
+
+.art {
+  width: clamp(8rem, 21vw, 22rem);
+  height: auto;
+  overflow: visible;
+  stroke-width: 1;
+  transition: stroke-width .55s var(--cue), transform .75s var(--cue);
+}
+
+.half-foot {
+  display: flex;
+  align-items: center;
+  gap: clamp(.75rem, 2vw, 1.5rem);
+  width: 100%;
+  padding-top: clamp(.9rem, 2vh, 1.4rem);
+  border-top: 1px solid currentColor;
+  transition: border-color .75s var(--cue);
+}
+.half--room .half-foot { justify-content: flex-end; }
+
+.half-label {
+  /* Sized to the column, not the page: "CINEMATOGRAPHER" and "LIGHTING
+     DESIGNER" are longer than "CINEMATOGRAPHY", which is what site.css's
+     display clamps were measured against. */
+  font-size: clamp(1.15rem, 2.4vw, 2.1rem);
+  color: var(--white);
+  transition: color .75s var(--cue);
+}
+.half-go {
+  font-size: clamp(1rem, 1.6vw, 1.35rem);
+  line-height: 1;
+  transition: transform .55s var(--cue);
+}
+
+
+/* --- Lit: the half inverts ------------------------------------------------ */
+
+.half.is-lit {
+  background: var(--white);
+  color: var(--black);
+}
+.half.is-lit .half-label { color: var(--black); }
+.half.is-lit .half-no    { color: var(--grey-3); }
+.half.is-lit .art        { stroke-width: 1.5; }
+.half.is-lit .half-go    { transform: translateX(.4rem); }
+.half--room.is-lit .half-go { transform: translateX(.4rem); }
+
+/* Focus lights a half exactly like the pointer does, on every device. */
+.half:focus-visible                 { background: var(--white); color: var(--black); }
+.half:focus-visible .half-label     { color: var(--black); }
+.half:focus-visible .half-no        { color: var(--grey-3); }
+.half:focus-visible .art            { stroke-width: 1.5; }
+.half:focus-visible .half-go        { transform: translateX(.4rem); }
+
+/* Hover is gated the way site.css gates .plate — touch can't hover, and a
+   sticky post-tap :hover would fight the idle cycle that stands in for it. */
+@media (hover: hover) and (pointer: fine) {
+  .half:hover             { background: var(--white); color: var(--black); }
+  .half:hover .half-label { color: var(--black); }
+  .half:hover .half-no    { color: var(--grey-3); }
+  .half:hover .art        { stroke-width: 1.5; }
+  .half:hover .half-go    { transform: translateX(.4rem); }
+}
+
+/* The seam follows the lit half. :has() keeps this in CSS, so the divider
+   still moves with no JS at all; where :has() is missing it simply stays
+   centred and nothing else changes. */
+.stage:has(.half--lens:focus-visible), .stage.seam--lens { --seam: var(--seam-open); }
+.stage:has(.half--room:focus-visible), .stage.seam--room { --seam: var(--seam-shut); }
+
+@media (hover: hover) and (pointer: fine) {
+  .stage:has(.half--lens:hover) { --seam: var(--seam-open); }
+  .stage:has(.half--room:hover) { --seam: var(--seam-shut); }
+}
+
+
+/* --- The geometry --------------------------------------------------------- */
+
+/* 01 — the aperture. Corner brackets stand off the frame and snap onto it
+   when the half lights: the shot being locked off. Right angles only. */
+.bk { transition: transform .55s var(--cue); }
+.bk--tl { transform: translate(-15px, -15px); }
+.bk--tr { transform: translate( 15px, -15px); }
+.bk--br { transform: translate( 15px,  15px); }
+.bk--bl { transform: translate(-15px,  15px); }
+
+.half.is-lit         .bk,
+.half:focus-visible  .bk { transform: none; }
+@media (hover: hover) and (pointer: fine) {
+  .half:hover .bk { transform: none; }
+}
+
+/* 02 — the beam. The fan is narrow at rest and opens when the half lights.
+   --swing is written by stage.js from the pointer's x, so the light comes
+   from where you're actually looking. Diagonals only. */
+.art-rays {
+  transform-box: view-box;
+  transform-origin: 200px 18px;        /* the lamp, at the head of the fan */
+  transform: skewX(var(--swing, 0deg)) scaleX(var(--spread, .55));
+  transition: transform .85s var(--cue);
+}
+.half.is-lit        .art-rays,
+.half:focus-visible .art-rays { --spread: 1; }
+@media (hover: hover) and (pointer: fine) {
+  .half:hover .art-rays { --spread: 1; }
+}
+
+
+/* --- The name across the seam --------------------------------------------
+   One copy of the text, difference-blended: white over the dark half, black
+   over the lit one, flipping mid-word as the seam slides beneath it. That
+   single image is the whole argument of the page — one name, two disciplines,
+   light on whichever one you are looking at. */
+
+.stage-name {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, 3vh, 1.9rem);
+  padding: 0 var(--pad);
+  color: var(--white);
+  mix-blend-mode: difference;
+  pointer-events: none;                /* the halves stay reachable through it */
+  text-align: center;
+}
+.stage-name .ln { display: block; }
+
+/* Deliberately smaller than site.css's .d-hero. On the photo homepage the
+   title is the only object in the frame; here it shares the viewport with two
+   drawings, and this size is what keeps "MILLER" clear of the geometry
+   anchored to either edge at every width down to the 860px stack. */
+.stage-name .d-hero { font-size: clamp(2.8rem, 10.5vw, 10rem); }
+
+.stage-place { color: var(--white); }
+
+.seam {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: var(--seam);
+  width: 1px;
+  background: var(--white);
+  mix-blend-mode: difference;
+  transition: left .75s var(--cue);
+  pointer-events: none;
+}
+
+
+/* --- The fader ------------------------------------------------------------
+   site.css names its easing "a fader move". This is the fader: a hairline in
+   the gutter that fills from the bottom as the page scrolls. Scroll-driven
+   CSS where supported; a plain unlit hairline where not. */
+
+.fader {
+  position: fixed;
+  left: max(.5rem, calc(var(--pad) / 2.4));
+  top: 24vh; bottom: 24vh;
+  width: 1px;
+  background: var(--line);
+  z-index: 90;
+  pointer-events: none;
+}
+.fader span {
+  display: block;
+  width: 100%; height: 100%;
+  background: var(--white);
+  transform: scaleY(0);
+  transform-origin: bottom;
+}
+@supports (animation-timeline: scroll()) {
+  .fader span {
+    animation: fader-up linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+@keyframes fader-up {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+
+/* ==========================================================================
+   BELOW THE SPLIT — the light comes up by line
+
+   The page goes back to black and climbs one rung per section. Brightness is
+   carried only by the colour of rules, never by filling an area with grey:
+     thesis  --line / --grey-3
+     about   --grey-3 / --grey-1
+     contact --grey-1 / --white
+   ========================================================================== */
+
+.band { padding: var(--gap) var(--pad); }
+
+.band--1 {
+  min-height: 88svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: clamp(2rem, 6vw, 3.5rem);
+  border-top: 1px solid var(--line);
+}
+.band--1 .display { max-width: 20ch; }
+.band--1 .display em { font-style: normal; color: var(--grey-3); }
+
+.band-tick {
+  width: clamp(2.5rem, 8vw, 6rem);
+  height: 1px;
+  background: var(--grey-3);
+}
+
+.band--2 { border-top: 1px solid var(--grey-3); }
+.band-body { max-width: 58ch; }
+.band-body p {
+  color: var(--grey-1);
+  font-size: clamp(1.05rem, 1.9vw, 1.45rem);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+.band-body p:first-child { color: var(--white); }
+.band-body p + p {
+  margin-top: clamp(1.75rem, 4vw, 2.5rem);
+  padding-top: clamp(1.75rem, 4vw, 2.5rem);
+  border-top: 1px solid var(--grey-1);
+}
+
+/* Brightest rung: every rule here is full white. */
+.band--3 { border-top: 1px solid var(--grey-1); }
+.band--3 .contact-mail { border-bottom-color: var(--white); }
+.band--3 .profiles { border-top-color: var(--white); }
+.band--3 .profile + .profile { border-left-color: var(--white); }
+
+
+/* ==========================================================================
+   CUES (motion)
+
+   Same contract as site.css: nothing here is load-bearing. With JS off the
+   `js` class never lands, no animation is declared at all, and the page
+   renders in its finished state — the split, the invert and the seam are
+   plain CSS and keep working.
+   ========================================================================== */
+
+/* The strike: white opens out of the seam and closes back into it. */
+.strike { display: none; }
+
+.js .strike {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 250;
+  background: var(--white);
+  pointer-events: none;
+  opacity: 0;
+  clip-path: inset(0 50% 0 50%);
+}
+.js.is-ready .strike { animation: strike .95s var(--cue) both; }
+
+@keyframes strike {
+  0%   { clip-path: inset(0 50% 0 50%); opacity: 1; }
+  34%  { clip-path: inset(0 0 0 0);     opacity: 1; }
+  100% { clip-path: inset(0 50% 0 50%); opacity: 0; }
+}
+
+/* Hero content waits for the strike. The 1.9s delay is a safety net, not the
+   intended timing: if stage.js never runs — 404, parse error, blocked — the
+   page still lights itself. `is-ready` just pulls the same reveal forward to
+   where it was designed to land. */
+.js .stage-fade { animation: stage-in .9s var(--cue) 1.9s both; }
+.js.is-ready .stage-fade   { animation-delay: .38s; }
+.js.is-ready .stage-fade--2 { animation-delay: .52s; }
+.js.is-ready .stage-fade--3 { animation-delay: .66s; }
+
+@keyframes stage-in {
+  from { opacity: 0; transform: translateY(1.25rem); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* The shapes draw themselves in. Dash values live inside the keyframes, so
+   with no animation running the geometry is simply whole. */
+.js.is-ready .art-frame    { animation: draw-frame 1.5s var(--cue) .62s both; }
+.js.is-ready .art-brackets { animation: draw-bracket 1s var(--cue) 1s both; }
+.js.is-ready .art-rays     { animation: draw-ray 1.3s var(--cue) .62s both; }
+
+@keyframes draw-frame {
+  from { stroke-dasharray: 908; stroke-dashoffset: 908; }
+  to   { stroke-dasharray: 908; stroke-dashoffset: 0; }
+}
+@keyframes draw-bracket {
+  from { stroke-dasharray: 56; stroke-dashoffset: 56; }
+  to   { stroke-dasharray: 56; stroke-dashoffset: 0; }
+}
+@keyframes draw-ray {
+  from { stroke-dasharray: 320; stroke-dashoffset: 320; }
+  to   { stroke-dasharray: 320; stroke-dashoffset: 0; }
+}
+
+
+/* --- Reduced motion: kill every cue, keep every state --------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .js .strike { display: none; }
+
+  /* site.css already collapses durations globally, but not delays — without
+     this the hero would sit blank for 1.9s and then appear. */
+  .js .stage-fade,
+  .js.is-ready .stage-fade,
+  .js.is-ready .art-frame,
+  .js.is-ready .art-brackets,
+  .js.is-ready .art-rays {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+  /* The rays keep their resting spread; only the transition is dropped. */
+  .art-rays { transform: scaleX(var(--spread, .55)) !important; }
+
+  .half, .art, .bk, .seam, .half-go { transition: none !important; }
+  .fader span { animation: none !important; }
+}
+
+
+/* --- Breakpoints ---------------------------------------------------------- */
+
+@media (max-width: 860px) {
+  /* The split turns on its side: two stacked halves, and the name straddles
+     the horizontal boundary instead of the vertical one. Clip-path comes off
+     entirely — at this width the halves are laid out, not revealed. */
+  .stage {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    min-height: 100svh;
+  }
+  .half {
+    position: relative;
+    inset: auto;
+    clip-path: none !important;
+    min-height: 50svh;
+  }
+  .half + .half { border-top: 1px solid var(--line); }
+  .half.is-lit + .half, .half + .half.is-lit { border-top-color: transparent; }
+
+  /* Stacked, the two halves would put both labels right where the name sits.
+     So each half packs its content against the OUTER edge of the screen —
+     lens to the top, room to the bottom — and the band either side of the
+     boundary is left empty for the name to straddle. */
+  .half-inner {
+    position: static;
+    width: 100%;
+    height: 100%;
+    gap: clamp(.9rem, 2.5vh, 1.75rem);
+    padding: clamp(5rem, 11vh, 7rem) var(--pad) clamp(1.5rem, 4vh, 2.5rem);
+  }
+  .half--lens .half-inner { justify-content: flex-start; }
+  .half--room .half-inner {
+    justify-content: flex-end;
+    padding-top: clamp(1.5rem, 4vh, 2.5rem);
+    padding-bottom: clamp(2.5rem, 7vh, 4rem);
+  }
+
+  .half-art { flex: 0 0 auto; height: clamp(3.5rem, 13vh, 7rem); }
+  .art { width: auto; height: 100%; }
+
+  /* Stacked, the seam would run straight through "MILLER" and read as a
+     strikethrough. The boundary is carried by the halves' own hairline, and
+     by the inversion itself once one of them lights. */
+  .seam { display: none; }
+
+  .fader { display: none; }
+}
+
+@media (max-width: 620px) {
+  .half-label { font-size: clamp(1.05rem, 5.2vw, 1.6rem); }
+  .stage-place { bottom: .75rem; }
+}
+
+
+/* --- Print ---------------------------------------------------------------- */
+
+@media print {
+  .strike, .fader, .seam, .half-art { display: none !important; }
+  .stage { min-height: 0; display: block; }
+  .half { position: relative; inset: auto; clip-path: none !important; background: none; color: #000; }
+  .half-inner { position: static; width: 100%; padding: 1rem 0; }
+  .stage-name, .stage-place { position: static; mix-blend-mode: normal; color: #000; }
+  .half-label { color: #000; }
+}
