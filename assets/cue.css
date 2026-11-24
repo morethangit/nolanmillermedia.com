@@ -337,6 +337,58 @@
 
 
 /* ==========================================================================
+   PULL BACK — tight on the stage, out to the monitor
+   ========================================================================== */
+
+.monitor { position: relative; height: 100vh; height: 100svh; }
+.js .monitor { height: 260vh; height: 260svh; }
+
+.monitor-stage {
+  --zoom: 1; --reveal: 1;   /* no-JS: the whole monitor, captioned */
+  position: sticky; top: 0;
+  height: 100vh; height: 100svh;
+  overflow: hidden;
+  background: #000;
+  isolation: isolate;
+}
+.js .monitor-stage { --zoom: 1.5; --reveal: 0; }
+
+/* Same cover-box trick as the show. The origin is the centre of the monitor's
+   picture area, so at 1.5x the overlay bars sit just outside the viewport. */
+.monitor-plate {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: max(100vw, 133.34vh);
+  width: max(100vw, 133.34svh);
+  aspect-ratio: 4 / 3;
+  transform: translate(-50%, -50%) scale(var(--zoom));
+  transform-origin: 53.5% 48.7%;
+  will-change: transform;
+}
+.monitor-plate img { width: 100%; height: 100%; object-fit: cover; }
+
+.monitor-stage::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(0deg, rgba(0,0,0,.92) 0%, rgba(0,0,0,.55) 32%, transparent 60%);
+  opacity: var(--reveal);
+  pointer-events: none;
+}
+
+.monitor-copy {
+  position: absolute;
+  z-index: 2;
+  left: var(--pad); right: var(--pad);
+  bottom: clamp(2rem, 7vh, 4.5rem);
+  max-width: 44rem;
+  opacity: var(--reveal);
+  transform: translateY(calc((1 - var(--reveal)) * 2rem));
+}
+.monitor-copy .eyebrow { margin-bottom: 1.2rem; }
+.monitor-copy em { font-style: normal; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.85); }
+.monitor-copy .lede { margin-top: 1.2rem; color: rgba(255,255,255,.8); }
+
+/* ==========================================================================
    CHANNELS — the disciplines as channel strips
    ========================================================================== */
 
@@ -631,6 +683,7 @@
 @media print {
   .show { height: auto !important; }
   .show-stage { position: static; height: auto; }
+  .monitor { display: none; }
   .show-plate, .letterbox, .framelines, .hud, .gels, .cues, .peek, .finale-beam { display: none !important; }
   .show-title { position: static; color: #000; mix-blend-mode: normal; -webkit-text-stroke: 0; padding: 2rem; }
   .cue-page::after { display: none; }

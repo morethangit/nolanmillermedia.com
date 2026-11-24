@@ -100,6 +100,8 @@ echo "== Homepage — the show plate =="
 # Worship set, violet beams + stained-glass wall. The whole homepage hero is built on
 # this frame: beam origins in assets/cue.css/index.html are placed in % of its 4:3 box.
 derive "$SRC/IMG_0893.jpeg" stage    0 1200 2000
+# Same room on a SmallHD/RED monitor — the homepage "pull back" section zooms out of it.
+derive "$SRC/IMG_6902.jpeg" monitor  0 1200 2000
 
 echo
 echo "total: $(du -sh "$OUT" | cut -f1) across $(ls "$OUT" | wc -l | tr -d ' ') files"
