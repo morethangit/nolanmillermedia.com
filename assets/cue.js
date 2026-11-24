@@ -88,7 +88,7 @@
   var elLabel = stage.querySelector('[data-cue-label]');
   var elTc    = stage.querySelector('[data-tc]');
   var elInt   = stage.querySelector('[data-int]');
-  var LABELS  = ['House out', 'Haze & beams', 'Full look', 'Through the lens'];
+  var LABELS  = ['Lights down', 'Beams', 'Full stage', 'On camera'];
 
   var W = 0, H = 0, offX = 0, offY = 0;
   function measure() {
