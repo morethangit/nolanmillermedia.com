@@ -96,5 +96,10 @@ derive "$SRC/DB34BE0D-4994-4509-99BF-A980AA6D227B.jpg" room-02 0  800 1179
 derive "$SRC/IMG_3384.jpeg" room-03 0 1200 2000
 derive "$SRC/IMG_4113.jpeg" room-04  0 1200 2000
 
+echo "== Homepage — the show plate =="
+# Worship set, violet beams + stained-glass wall. The whole homepage hero is built on
+# this frame: beam origins in assets/cue.css/index.html are placed in % of its 4:3 box.
+derive "$SRC/IMG_0893.jpeg" stage    0 1200 2000
+
 echo
 echo "total: $(du -sh "$OUT" | cut -f1) across $(ls "$OUT" | wc -l | tr -d ' ') files"

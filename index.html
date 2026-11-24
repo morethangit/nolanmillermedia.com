@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Nolan Miller — Director of Photography &amp; Lighting Designer</title>
 <meta name="description" content="Nolan Miller is a director of photography and lighting designer in Cincinnati, Ohio. Short film, music video and branded work; concert, worship and live event lighting.">
 <meta name="theme-color" content="#000000">
@@ -19,14 +19,21 @@
 <meta property="og:image" content="https://www.nolanmillermedia.com/images/social-preview.png">
 <meta name="twitter:card" content="summary_large_image">
 
+<link rel="preload" as="image" href="/images/opt/stage-2000.jpg"
+      imagesrcset="/images/opt/stage-1200.jpg 1200w, /images/opt/stage-2000.jpg 2000w" imagesizes="max(100vw, 133vh)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="/assets/site.css">
-<script>document.documentElement.classList.add('js');</script>
+<link rel="stylesheet" href="/assets/cue.css">
+<script>
+  document.documentElement.classList.add('js');
+  /* Restore the visitor's gel before first paint so the page never flashes the default. */
+  try { var g = localStorage.getItem('nmm-gel'); if (g) document.documentElement.dataset.gel = g; } catch (e) {}
+</script>
 </head>
 
-<body>
+<body class="cue-page">
 <div class="blackout" aria-hidden="true"></div>
 <a class="skip" href="#main">Skip to content</a>
 
@@ -41,93 +48,248 @@
 
 <main id="main">
 
-  <!-- Hero ---------------------------------------------------------------- -->
-  <header class="hero">
-    <div class="hero-plate" aria-hidden="true">
-      <picture>
-        <img src="/images/opt/room-04-2000.jpg"
-             srcset="/images/opt/room-04-1200.jpg 1200w, /images/opt/room-04-2000.jpg 2000w"
-             sizes="100vw" alt="" width="2000" height="1500" fetchpriority="high" decoding="async">
-      </picture>
-    </div>
+  <!-- ======================================================================
+       THE SHOW
+       One photograph, run like a cue stack. Scrolling is the GO button:
+       Q0 house out (only the followspot) → Q1 haze & beams → Q2 full look →
+       Q3 through the lens (the frame closes to 2.39:1 and the camera rolls).
+       The pointer is the followspot. Without JS, this is simply the photo, lit.
+       ====================================================================== -->
+  <section class="show" id="show" aria-label="Introduction">
+    <div class="show-stage">
 
-    <div class="hero-inner shell">
-      <h1 class="display d-hero hero-title">
+      <!-- A 4:3 box sized to cover the viewport, so beam origins can be placed
+           in the photo's own coordinates and stay on the truss at any size. -->
+      <div class="show-plate" aria-hidden="true">
+        <img class="plate-dim" src="/images/opt/stage-2000.jpg"
+             srcset="/images/opt/stage-1200.jpg 1200w, /images/opt/stage-2000.jpg 2000w"
+             sizes="max(100vw, 133vh)" alt="" width="2000" height="1500" fetchpriority="high" decoding="async">
+
+        <div class="plate-lit">
+          <img src="/images/opt/stage-2000.jpg"
+               srcset="/images/opt/stage-1200.jpg 1200w, /images/opt/stage-2000.jpg 2000w"
+               sizes="max(100vw, 133vh)" alt="" width="2000" height="1500" decoding="async">
+          <span class="gel-wash"></span>
+        </div>
+
+        <svg class="beams" viewBox="0 0 1000 750" preserveAspectRatio="none" focusable="false">
+          <defs>
+            <linearGradient id="beam-fall" x1="0" y1="1" x2="0" y2="0">
+              <stop class="beam-stop" offset="0"   stop-opacity=".95"/>
+              <stop class="beam-stop" offset=".35" stop-opacity=".35"/>
+              <stop class="beam-stop" offset="1"   stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <!-- --ox/--oy: fixture position on the truss, in viewBox units. --a: resting pan. -->
+          <g class="beam" style="--ox:440px;--oy:350px;--a:-64deg;--d:9s;--dl:-1s"><polygon points="440,350 428,-500 452,-500"/></g>
+          <g class="beam" style="--ox:468px;--oy:362px;--a:-47deg;--d:7.5s;--dl:-3s"><polygon points="468,362 456,-500 480,-500"/></g>
+          <g class="beam" style="--ox:494px;--oy:352px;--a:-26deg;--d:11s;--dl:-5s"><polygon points="494,352 482,-500 506,-500"/></g>
+          <g class="beam" style="--ox:520px;--oy:368px;--a:-8deg;--d:8s;--dl:-2s"><polygon points="520,368 508,-500 532,-500"/></g>
+          <g class="beam" style="--ox:548px;--oy:356px;--a:12deg;--d:10s;--dl:-6s"><polygon points="548,356 536,-500 560,-500"/></g>
+          <g class="beam" style="--ox:574px;--oy:366px;--a:31deg;--d:7s;--dl:-4s"><polygon points="574,366 562,-500 586,-500"/></g>
+          <g class="beam" style="--ox:600px;--oy:352px;--a:49deg;--d:9.5s;--dl:-7s"><polygon points="600,352 588,-500 612,-500"/></g>
+          <g class="beam" style="--ox:626px;--oy:346px;--a:66deg;--d:8.5s;--dl:-2.5s"><polygon points="626,346 614,-500 638,-500"/></g>
+        </svg>
+
+        <span class="haze"></span>
+      </div>
+
+      <div class="letterbox letterbox--top" aria-hidden="true"></div>
+      <div class="letterbox letterbox--bottom" aria-hidden="true"></div>
+
+      <div class="framelines" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+      <!-- Monitor overlay: half lighting console, half camera monitor. -->
+      <div class="hud hud--tl mono mono--lit" aria-hidden="true">
+        <span class="rec"><i></i>Rec</span>
+        <span>Q<b data-cue-no>0</b></span>
+        <span class="hud-dim" data-cue-label>House out</span>
+      </div>
+      <div class="hud hud--tr mono mono--lit" aria-hidden="true">
+        <span class="hud-dim">TC</span> <span data-tc>00:00:00:00</span>
+      </div>
+      <div class="hud hud--br mono" aria-hidden="true">
+        <span>5600K</span><span>T2.8</span><span>180&deg;</span><span>INT <b class="mono--lit" data-int>000</b>%</span>
+      </div>
+
+      <h1 class="show-title display">
         <span class="ln">Nolan</span>
         <span class="ln">Miller</span>
+        <span class="show-role mono mono--lit">Director of Photography <span aria-hidden="true">/</span> Lighting Designer <span aria-hidden="true">/</span> Cincinnati</span>
       </h1>
-      <p class="hero-meta mono mono--lit">
-        <span>Director of Photography</span>
-        <span class="sep" aria-hidden="true">/</span>
-        <span>Lighting Designer</span>
-        <span class="sep" aria-hidden="true">/</span>
-        <span>Cincinnati, OH</span>
-      </p>
-    </div>
 
-    <div class="hero-cue" aria-hidden="true">
-      <span class="mono">Scroll</span>
-      <span class="bar"></span>
-    </div>
-  </header>
+      <ol class="cues" aria-label="Cue stack">
+        <li class="cue" data-q="0">
+          <p class="mono">Q0 — House out</p>
+          <p class="cue-line">Every room starts in the dark.</p>
+          <p class="cue-hint mono"><span class="hint-fine">Move the light</span><span class="hint-touch">Drag the light</span> &nbsp;·&nbsp; scroll to run the show</p>
+        </li>
+        <li class="cue" data-q="1">
+          <p class="mono">Q1 — Haze &amp; beams</p>
+          <p class="cue-line">Then the haze goes in, so the air has something to catch.</p>
+        </li>
+        <li class="cue" data-q="2">
+          <p class="mono">Q2 — Full look</p>
+          <p class="cue-line">Then the room comes up. Light is the first thing an audience reads.</p>
+        </li>
+        <li class="cue" data-q="3">
+          <p class="mono">Q3 — Through the lens</p>
+          <p class="cue-line">And then I frame it. <em>A frame keeps the light. A room lets it go.</em></p>
+        </li>
+      </ol>
 
-  <!-- The thesis ----------------------------------------------------------- -->
-  <section class="statement shell">
-    <p class="eyebrow mono reveal">One craft, two audiences</p>
-    <h2 class="display d-lg reveal reveal-1">
-      A frame keeps the light.<br>
-      <em>A room lets it go.</em>
-    </h2>
-    <p class="lede reveal reveal-2" style="margin-top:clamp(1.5rem,4vw,2.5rem)">
-      I light things for a living — sometimes for a lens, sometimes for a few thousand people
-      sitting in the dark. It's the same decision either way: <strong>what the audience sees,
-      and what stays hidden.</strong>
-    </p>
+      <!-- Gel picker: real gel numbers. The colour lands in the followspot and the beams,
+           and follows the visitor through the rest of the page. -->
+      <fieldset class="gels">
+        <legend class="mono">Gel <b class="mono--lit" data-gel-name>N/C</b></legend>
+        <label class="gel" style="--c:#ffffff"><input type="radio" name="gel" value="nc"><span class="sr">No colour</span></label>
+        <label class="gel" style="--c:#3d2bff"><input type="radio" name="gel" value="l181"><span class="sr">L181 Congo</span></label>
+        <label class="gel" style="--c:#b14bff"><input type="radio" name="gel" value="l707"><span class="sr">L707 Violet</span></label>
+        <label class="gel" style="--c:#ff1f3d"><input type="radio" name="gel" value="l106"><span class="sr">L106 Red</span></label>
+        <label class="gel" style="--c:#00c4c4"><input type="radio" name="gel" value="l115"><span class="sr">L115 Peacock</span></label>
+        <label class="gel" style="--c:#ff9a3c"><input type="radio" name="gel" value="l204"><span class="sr">L204 CTO</span></label>
+      </fieldset>
+
+    </div>
   </section>
 
-  <!-- The split ------------------------------------------------------------ -->
-  <div class="split" id="disciplines">
+  <!-- ======================================================================
+       CHANNELS — the two disciplines as console channel strips.
+       ====================================================================== -->
+  <section class="channels" aria-label="Disciplines">
+    <header class="sect-head shell">
+      <p class="eyebrow mono reveal">Patch</p>
+      <h2 class="display d-lg reveal reveal-1">Two channels,<br><em>one craft</em></h2>
+    </header>
 
-    <a class="panel" href="/cinematography/">
-      <div class="panel-plate plate" aria-hidden="true">
-        <picture>
+    <div class="strips">
+      <a class="strip" href="/cinematography/">
+        <span class="strip-plate plate" aria-hidden="true">
           <img src="/images/opt/ysuc-still-1200.jpg"
                srcset="/images/opt/ysuc-still-1200.jpg 1200w, /images/opt/ysuc-still-2000.jpg 2000w"
                sizes="(max-width: 860px) 100vw, 50vw" alt="" width="1200" height="658" loading="lazy" decoding="async">
-        </picture>
-      </div>
-      <p class="panel-index mono">01 — Lens</p>
-      <h2 class="display d-lg panel-title">Cinematography</h2>
-      <p class="panel-sub">Director of photography for short film, music video and branded work.</p>
-      <span class="panel-go mono mono--lit">
-        <span>View the work</span>
-        <span class="arw" aria-hidden="true">&rarr;</span>
-      </span>
-    </a>
+        </span>
+        <span class="strip-ch mono mono--lit">CH 01</span>
+        <span class="strip-fader" aria-hidden="true"><i></i></span>
+        <span class="strip-body">
+          <span class="strip-kicker mono">Lens</span>
+          <span class="display d-lg strip-title">Cinema&shy;tography</span>
+          <span class="strip-sub">Director of photography for short film, music video and branded work.</span>
+          <span class="strip-go mono mono--lit">Bring it up <span aria-hidden="true">&rarr;</span></span>
+        </span>
+      </a>
 
-    <a class="panel" href="/lighting/">
-      <div class="panel-plate plate" aria-hidden="true">
-        <picture>
+      <a class="strip" href="/lighting/">
+        <span class="strip-plate plate" aria-hidden="true">
           <img src="/images/opt/room-01-800.jpg"
                srcset="/images/opt/room-01-800.jpg 800w, /images/opt/room-01-1179.jpg 1179w"
                sizes="(max-width: 860px) 100vw, 50vw" alt="" width="1179" height="1461" loading="lazy" decoding="async">
-        </picture>
-      </div>
-      <p class="panel-index mono">02 — Room</p>
-      <h2 class="display d-lg panel-title">Lighting Design</h2>
-      <p class="panel-sub">Design, programming and operation for concerts, worship and live events.</p>
-      <span class="panel-go mono mono--lit">
-        <span>View the work</span>
-        <span class="arw" aria-hidden="true">&rarr;</span>
-      </span>
-    </a>
+        </span>
+        <span class="strip-ch mono mono--lit">CH 02</span>
+        <span class="strip-fader" aria-hidden="true"><i></i></span>
+        <span class="strip-body">
+          <span class="strip-kicker mono">Room</span>
+          <span class="display d-lg strip-title">Lighting Design</span>
+          <span class="strip-sub">Design, programming and operation for concerts, worship and live events.</span>
+          <span class="strip-go mono mono--lit">Bring it up <span aria-hidden="true">&rarr;</span></span>
+        </span>
+      </a>
+    </div>
+  </section>
 
-  </div>
+  <!-- ======================================================================
+       SHOT LIST — cinematography, as rows. A still follows the cursor.
+       ====================================================================== -->
+  <section class="list shell" aria-labelledby="shots-h">
+    <div class="list-head">
+      <p class="eyebrow mono reveal">Shot list</p>
+      <h2 class="display d-lg reveal reveal-1" id="shots-h">Selected<br>frames</h2>
+      <a class="list-all mono mono--lit reveal reveal-2" href="/cinematography/">All cinematography &rarr;</a>
+    </div>
 
-  <!-- About ---------------------------------------------------------------- -->
+    <ul class="rows" data-preview>
+      <li><a class="row" href="https://www.youtube.com/watch?v=8LwlV5GjqX0" target="_blank" rel="noopener" data-still="/images/opt/ysuc-still-1200.jpg">
+        <span class="row-no mono">S01</span>
+        <img class="row-thumb" src="/images/opt/ysuc-still-1200.jpg" alt="" width="1200" height="658" loading="lazy" decoding="async">
+        <span class="row-title display d-md">You See, UC Tonight!</span>
+        <span class="row-meta mono">DP / Editor · 2025</span>
+        <span class="row-len mono">25:46 ↗</span>
+      </a></li>
+      <li><a class="row" href="https://youtu.be/VwbERRhX_No" target="_blank" rel="noopener" data-still="/images/opt/poolside-1200.jpg">
+        <span class="row-no mono">S02</span>
+        <img class="row-thumb" src="/images/opt/poolside-1200.jpg" alt="" width="1200" height="506" loading="lazy" decoding="async">
+        <span class="row-title display d-md">Poolside Getaway</span>
+        <span class="row-meta mono">DP · 2025</span>
+        <span class="row-len mono">06:08 ↗</span>
+      </a></li>
+      <li><a class="row" href="/cinematography/" data-still="/images/opt/threshold-1200.jpg">
+        <span class="row-no mono">S03</span>
+        <img class="row-thumb" src="/images/opt/threshold-1200.jpg" alt="" width="1200" height="675" loading="lazy" decoding="async">
+        <span class="row-title display d-md">Threshold</span>
+        <span class="row-meta mono">DP / Editor · 2025</span>
+        <span class="row-len mono">12:31</span>
+      </a></li>
+      <li><a class="row" href="https://www.youtube.com/watch?v=4_MYsiE-mr0" target="_blank" rel="noopener" data-still="/images/opt/dead-bent-1200.jpg">
+        <span class="row-no mono">S04</span>
+        <img class="row-thumb" src="/images/opt/dead-bent-1200.jpg" alt="" width="1200" height="675" loading="lazy" decoding="async">
+        <span class="row-title display d-md">Dead Bent</span>
+        <span class="row-meta mono">Director · 2024</span>
+        <span class="row-len mono">04:38 ↗</span>
+      </a></li>
+      <li><a class="row" href="https://www.youtube.com/watch?v=xXmFoCNyP7I" target="_blank" rel="noopener" data-still="/images/opt/horsesitter-1200.jpg">
+        <span class="row-no mono">S05</span>
+        <img class="row-thumb" src="/images/opt/horsesitter-1200.jpg" alt="" width="1200" height="675" loading="lazy" decoding="async">
+        <span class="row-title display d-md">Horsesitter | Tiny Dorm Concert</span>
+        <span class="row-meta mono">Director · 2025</span>
+        <span class="row-len mono">05:17 ↗</span>
+      </a></li>
+    </ul>
+  </section>
+
+  <!-- ======================================================================
+       CUE LIST — lighting credits, set like a console's cue sheet.
+       ====================================================================== -->
+  <section class="list shell" aria-labelledby="cues-h">
+    <div class="list-head">
+      <p class="eyebrow mono reveal">Cue list</p>
+      <h2 class="display d-lg reveal reveal-1" id="cues-h">Selected<br>rooms</h2>
+      <a class="list-all mono mono--lit reveal reveal-2" href="/lighting/">All lighting &rarr;</a>
+    </div>
+
+    <ul class="rows" data-preview>
+      <li><a class="row" href="/lighting/" data-still="/images/opt/room-02-1179.jpg">
+        <span class="row-no mono">Q1</span>
+        <img class="row-thumb" src="/images/opt/room-02-800.jpg" alt="" width="1179" height="1461" loading="lazy" decoding="async">
+        <span class="row-title display d-md">Crossroads Church / East Side</span>
+        <span class="row-meta mono">LD &amp; Operator · GrandMA2</span>
+        <span class="row-len mono">2024–26</span>
+      </a></li>
+      <li><a class="row" href="/lighting/" data-still="/images/opt/room-03-1200.jpg">
+        <span class="row-no mono">Q2</span>
+        <img class="row-thumb" src="/images/opt/room-03-1200.jpg" alt="" width="1200" height="900" loading="lazy" decoding="async">
+        <span class="row-title display d-md">Bogart's</span>
+        <span class="row-meta mono">LD · GrandMA3, busked</span>
+        <span class="row-len mono">2024</span>
+      </a></li>
+      <li><a class="row" href="/lighting/" data-still="/images/opt/room-04-1200.jpg">
+        <span class="row-no mono">Q3</span>
+        <img class="row-thumb" src="/images/opt/room-04-1200.jpg" alt="" width="1200" height="900" loading="lazy" decoding="async">
+        <span class="row-title display d-md">Northstar Church / Camp Chautauqua</span>
+        <span class="row-meta mono">LD &amp; Programmer · GrandMA2</span>
+        <span class="row-len mono">2025</span>
+      </a></li>
+    </ul>
+  </section>
+
+  <!-- Floating still for the two lists (fine pointers only). -->
+  <div class="peek" aria-hidden="true"><img alt=""></div>
+
+  <!-- ======================================================================
+       ABOUT
+       ====================================================================== -->
   <section class="about shell" id="about">
     <div>
-      <p class="eyebrow mono reveal">About</p>
+      <p class="eyebrow mono reveal">Programmer's notes</p>
       <h2 class="display d-lg reveal reveal-1">Behind<br>both</h2>
     </div>
     <div class="about-body reveal reveal-2">
@@ -140,33 +302,41 @@
     </div>
   </section>
 
-  <!-- Contact -------------------------------------------------------------- -->
-  <section class="contact shell" id="contact">
-    <p class="eyebrow mono reveal">Get in touch</p>
-    <h2 class="display d-lg reveal reveal-1">Let's make<br>something</h2>
+  <!-- ======================================================================
+       CONTACT — the last cue. Standby… GO.
+       ====================================================================== -->
+  <section class="finale" id="contact">
+    <div class="finale-beam" aria-hidden="true"></div>
+    <div class="shell finale-inner">
+      <p class="eyebrow mono reveal">Final cue — standing by</p>
+      <h2 class="display d-lg reveal reveal-1">Let's make<br>something</h2>
 
-    <a class="contact-mail reveal reveal-2" href="mailto:nolan.miller126@gmail.com">nolan.miller126@gmail.com</a>
+      <a class="go reveal reveal-2" href="mailto:nolan.miller126@gmail.com" aria-label="Email nolan.miller126@gmail.com">
+        <span class="go-key display">Go</span>
+        <span class="go-addr mono mono--lit">nolan.miller126@gmail.com</span>
+      </a>
 
-    <p class="mono reveal reveal-2" style="margin-bottom:clamp(2rem,5vw,3rem)">
-      Available for cinematography, lighting design and live event production
-    </p>
+      <p class="mono reveal reveal-2 finale-note">
+        Available for cinematography, lighting design and live event production
+      </p>
 
-    <div class="profiles reveal reveal-3">
-      <a class="profile" href="https://www.youtube.com/@nolanmiller186" target="_blank" rel="noopener">
-        <span class="mono">Media</span>
-        <span class="display d-md">YouTube</span>
-        <span class="profile-handle">@nolanmiller186</span>
-      </a>
-      <a class="profile" href="https://www.instagram.com/visualsbynolan" target="_blank" rel="noopener">
-        <span class="mono">Stills &amp; behind the scenes</span>
-        <span class="display d-md">Instagram</span>
-        <span class="profile-handle">@visualsbynolan</span>
-      </a>
-      <a class="profile" href="https://www.linkedin.com/in/nolancm" target="_blank" rel="noopener">
-        <span class="mono">Professional</span>
-        <span class="display d-md">LinkedIn</span>
-        <span class="profile-handle">/in/nolancm</span>
-      </a>
+      <div class="profiles reveal reveal-3">
+        <a class="profile" href="https://www.youtube.com/@nolanmiller186" target="_blank" rel="noopener">
+          <span class="mono">Media</span>
+          <span class="display d-md">YouTube</span>
+          <span class="profile-handle">@nolanmiller186</span>
+        </a>
+        <a class="profile" href="https://www.instagram.com/visualsbynolan" target="_blank" rel="noopener">
+          <span class="mono">Stills &amp; behind the scenes</span>
+          <span class="display d-md">Instagram</span>
+          <span class="profile-handle">@visualsbynolan</span>
+        </a>
+        <a class="profile" href="https://www.linkedin.com/in/nolancm" target="_blank" rel="noopener">
+          <span class="mono">Professional</span>
+          <span class="display d-md">LinkedIn</span>
+          <span class="profile-handle">/in/nolancm</span>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -183,5 +353,6 @@
 </footer>
 
 <script src="/assets/site.js" defer></script>
+<script src="/assets/cue.js" defer></script>
 </body>
 </html>
